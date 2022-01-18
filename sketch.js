@@ -6,6 +6,10 @@ var engine, world,ground;
 var cenario;
 var torre, torreimg;
 
+var angulo;
+var cannon;
+var ballCannon;
+
 
 function preload() {
  cenario = loadImage("./assets/background.gif");
@@ -26,6 +30,12 @@ function setup() {
 
   torre = Bodies.rectangle(160, 350, 160, 310, options);
   World.add(world,torre);
+
+  angulo = 20;
+
+  cannon = new Cannon(180, 110, 130, 100, angulo);
+
+  ballCannon = new BallCannon(cannon.x, cannon.y);
  
 }
 
@@ -41,4 +51,8 @@ function draw() {
   imageMode(CENTER);
   image(torreimg, torre.position.x, torre.position.y, 160, 310);
   pop();
+
+  cannon.show();
+  ballCannon.show();
+
 }
