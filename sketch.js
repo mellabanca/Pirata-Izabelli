@@ -1,3 +1,27 @@
+/*Matrizes
+//Exemplo simples de matriz
+var matriz1 = [1,2,3,4,5];
+//console.log(matriz1);
+console.log(matriz1[2]);
+
+//Matriz com diferentes tipos de dados
+var matriz2 = [1, "Melissa", true];
+//console.log(matriz2);
+console.log(matriz2[1]);
+
+//Matriz de matrizes
+var matriz3 = [[1,2,3,4,5], [3,4,5,6,7], [5,6,8,9,10]];
+//console.log(matriz3);
+console.log(matriz3[1][2]);
+
+//Como adicionar elementos na matriz
+matriz1.push(10);
+matriz1.push(20);
+console.log(matriz1);
+matriz1.pop();
+matriz1.pop();
+console.log(matriz1);*/
+
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
@@ -31,6 +55,7 @@ function setup() {
   torre = Bodies.rectangle(160, 350, 160, 310, options);
   World.add(world,torre);
 
+  angleMode(DEGREES);
   angulo = 20;
 
   cannon = new Cannon(180, 110, 130, 100, angulo);
@@ -54,5 +79,12 @@ function draw() {
 
   cannon.show();
   ballCannon.show();
+
+}
+function keyReleased(){
+  if(keyCode === DOWN_ARROW){
+    ballCannon.shoot();
+
+  }
 
 }
