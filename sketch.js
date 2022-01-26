@@ -34,6 +34,11 @@ var angulo;
 var cannon;
 var ballCannon;
 
+var ballas = [];
+//console.log(ballas);
+
+var boat;
+
 
 function preload() {
  cenario = loadImage("./assets/background.gif");
@@ -60,7 +65,7 @@ function setup() {
 
   cannon = new Cannon(180, 110, 130, 100, angulo);
 
-  ballCannon = new BallCannon(cannon.x, cannon.y);
+  boat = new Boat(width-79, height-60, 170, 170, -80);
  
 }
 
@@ -78,12 +83,38 @@ function draw() {
   pop();
 
   cannon.show();
-  ballCannon.show();
+
+  Matter.Body.setVelocity(boat.body, {x:-0.9, y:0});
+  boat.show();
+
+  for(var i = 0; i<ballas.length; i ++){
+    mostrar(ballas[i], i);
+
+  }
 
 }
 function keyReleased(){
   if(keyCode === DOWN_ARROW){
-    ballCannon.shoot();
+    ballas[ballas.length-1].shoot();
+
+  }
+
+}
+
+function keyPressed(){
+  if(keyCode === DOWN_ARROW){
+    var ballCannon = new BallCannon(cannon.x, cannon.y);
+    ballas.push(ballCannon);
+
+    
+
+  }
+
+}
+
+function mostrar(ballCannon, i){
+  if(ballCannon){
+    ballCannon.show();
 
   }
 
