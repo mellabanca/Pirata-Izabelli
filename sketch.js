@@ -39,10 +39,17 @@ var ballas = [];
 
 var boat;
 
+var boatis = [];
+
+var boatisAnimation = [];
+var boatisDados, boatisSpritesheet;
+
 
 function preload() {
  cenario = loadImage("./assets/background.gif");
  torreimg = loadImage("./assets/tower.png");
+ boatisDados = loadJSON("./assets/boat/boat.json");
+ boatisSpritesheet = loadImage("./assets/boat/boat.png");
 }
 function setup() {
 
@@ -65,7 +72,13 @@ function setup() {
 
   cannon = new Cannon(180, 110, 130, 100, angulo);
 
-  boat = new Boat(width-79, height-60, 170, 170, -80);
+  var boatisFrames = boatisDados.frames;
+
+  for(var i = 0; i < boatisFrames.length; i++){
+    var pos = boatisFrames[i].position;
+    var img = boatisSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+    boatisAnimation.push(img);
+  }
  
 }
 
@@ -84,12 +97,11 @@ function draw() {
 
   cannon.show();
 
-  Matter.Body.setVelocity(boat.body, {x:-0.9, y:0});
-  boat.show();
+  mostrarBoatis();
 
   for(var i = 0; i<ballas.length; i ++){
     mostrar(ballas[i], i);
-
+    colidionBallas(i);
   }
 
 }
@@ -115,7 +127,47 @@ function keyPressed(){
 function mostrar(ballCannon, i){
   if(ballCannon){
     ballCannon.show();
+    if(ballCannon.body.position.x >= width || ballCannon.body.position.y >= height-50){
+      ballCannon.eraser(i);
 
+    }
+  }
+
+}
+
+function mostrarBoatis(){
+  if(boatis.length > 0){
+    if(boatis[boatis.length-1] === undefined || boatis[boatis.length-1].body.position.x < width-300){
+      var positions = [-40, -60, -70, -20];
+      var position = random(positions);
+      var boat = new Boat(width, height-100, 170, 170, position, boatisAnimation);
+      boatis.push(boat);
+    }
+    for(var i = 0; i < boatis.length; i++){
+      if(boatis[i]){
+        Matter.Body.setVelocity(boatis[i].body, {x: -0.9, y: 0});
+        boatis[i].show();
+        boatis[i].animater();
+      }
+    }
+
+  } else{
+    var boat = new Boat(width, height-60, 170, 170, -60, boatisAnimation);
+    boatis.push(boat);
+  }
+
+}
+
+function colidionBallas(index){
+  for(var i = 0; i < boatis.length; i++){
+    if(ballas[index] !== undefined && boatis[i] !== undefined){
+      var collido = Matter.SAT.collides(ballas[index].body, boatis[i].body);
+      if(collido.collided){
+        boatis[i].eraser(i);
+        Matter.World.remove(world, ballas[index].body);
+        delete ballas[index];
+      }
+    }
   }
 
 }
