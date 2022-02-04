@@ -15,6 +15,11 @@ class Boat {
     }
 
     eraser(index){ 
+        this.animation = quebradoBoatis;
+        this.speed = 0.05;
+        this.lar = 300;
+        this.alt = 300;
+        this.bquebrado = true; 
         setTimeout(() => {
             Matter.World.remove(world, boatis[index].body);
             delete boatis[index];

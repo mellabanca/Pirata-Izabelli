@@ -44,12 +44,24 @@ var boatis = [];
 var boatisAnimation = [];
 var boatisDados, boatisSpritesheet;
 
+var quebradoBoatis = [];
+var quebraDado, quebraSpritesheet;
+
+var aguaAnime = [];
+var aguaDado, aguaSpritesheet;
+
+var acabou = false;
+
 
 function preload() {
  cenario = loadImage("./assets/background.gif");
  torreimg = loadImage("./assets/tower.png");
  boatisDados = loadJSON("./assets/boat/boat.json");
  boatisSpritesheet = loadImage("./assets/boat/boat.png");
+ quebraDado = loadJSON("./assets/boat/brokenBoat.json");
+ quebraSpritesheet = loadImage("./assets/boat/brokenBoat.png");
+ aguaDado = loadJSON("./assets/waterSplash/waterSplash.json");
+ aguaSpritesheet = loadImage("./assets/waterSplash/waterSplash.png");
 }
 function setup() {
 
@@ -79,7 +91,23 @@ function setup() {
     var img = boatisSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
     boatisAnimation.push(img);
   }
+
+  var quebraFrames = quebraDado.frames;
+
+  for(var i = 0; i < quebraFrames.length; i++){
+    var pos = quebraFrames[i].position;
+    var img = quebraSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+    quebradoBoatis.push(img);
+  }
  
+  var aguaFrames = aguaDado.frames;
+
+  for(var i = 0; i < aguaFrames.length; i++){
+    var pos = aguaFrames[i].position;
+    var img = aguaSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+    aguaAnime.push(img);
+  }
+
 }
 
 function draw() {
@@ -127,6 +155,7 @@ function keyPressed(){
 function mostrar(ballCannon, i){
   if(ballCannon){
     ballCannon.show();
+    ballCannon.animater();
     if(ballCannon.body.position.x >= width || ballCannon.body.position.y >= height-50){
       ballCannon.eraser(i);
 
@@ -148,6 +177,11 @@ function mostrarBoatis(){
         Matter.Body.setVelocity(boatis[i].body, {x: -0.9, y: 0});
         boatis[i].show();
         boatis[i].animater();
+        var collido = Matter.SAT.collides(torre, boatis[i].body);
+        if(collido.collided && !boatis[i].bquebrado){
+          acabou = true;
+          fimdegame();
+        }
       }
     }
 
@@ -170,4 +204,21 @@ function colidionBallas(index){
     }
   }
 
+}
+
+function fimdegame(){
+  swal(
+    {
+      title: "Fim de game, soldado!",
+      text: "Obrigado pelo seu tempo!",
+      imageUrl: "https://raw.githubusercontent.com/whitehatjr/PiratesInvasion/main/assets/boat.png",
+      imageSize: "150x150", 
+      confirmButtonText: "Jogar Novamente"
+  },
+  function(isConfirm){
+    if(isConfirm){
+      location.reload();
+    }
+  }
+  )
 }
